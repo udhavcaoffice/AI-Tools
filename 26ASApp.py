@@ -22,16 +22,16 @@ st.set_page_config(
 st.markdown("""
     <style>
         /* 1. GLOBAL FONT & COLOR SETTINGS */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
         
         html, body, [class*="css"] {
             font-family: 'Inter', sans-serif;
             color: #1F2937;
         }
 
-        /* 2. AGGRESSIVE WHITESPACE REMOVAL (Fixes the Border Issue) */
+        /* 2. AGGRESSIVE WHITESPACE REMOVAL */
         .block-container {
-            padding-top: 1rem !important;
+            padding-top: 0rem !important; /* Removed top padding completely */
             padding-bottom: 2rem !important;
             padding-left: 2rem !important;
             padding-right: 2rem !important;
@@ -45,75 +45,89 @@ st.markdown("""
 
         /* 3. SIDEBAR STYLING */
         [data-testid="stSidebar"] {
-            background-color: #F3F4F6; /* Light gray professional bg */
-            border-right: 1px solid #E5E7EB;
+            background-color: #F8FAFC; 
+            border-right: 1px solid #E2E8F0;
         }
         
-        /* 4. CUSTOM HEADER COMPONENT */
+        /* 4. CUSTOM HEADER COMPONENT - UPDATED FOR SIZE */
         .custom-header {
             background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); /* Modern Navy Gradient */
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            padding: 40px 30px; /* Increased padding for grander look */
+            border-radius: 0px 0px 16px 16px;
+            margin-bottom: 30px;
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
+        
+        /* BIGGER FIRM NAME */
         .custom-header h1 {
-            font-size: 26px;
-            font-weight: 600;
+            font-size: 42px !important; /* Increased from 26px */
+            font-weight: 800 !important; /* Extra Bold */
             margin: 0;
             color: #FFFFFF !important;
-            letter-spacing: -0.5px;
+            letter-spacing: 1px;
+            text-transform: uppercase; /* Makes it look more official */
+            line-height: 1.2;
         }
+        
+        /* BIGGER SUBTITLE */
         .custom-header p {
-            font-size: 15px;
+            font-size: 20px !important; /* Increased from 15px */
             color: #94A3B8;
-            margin: 4px 0 0 0;
-            font-weight: 400;
+            margin: 8px 0 0 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
-        /* 5. "CARD" STYLE FOR TOOLS (Makes it look like software, not a doc) */
+        /* 5. "CARD" STYLE FOR TOOLS */
         .tool-card {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 24px;
+            border-radius: 12px;
             border: 1px solid #E5E7EB;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
         
         /* 6. BUTTON STYLING */
         .stButton>button {
-            background-color: #2563EB; /* Bright Professional Blue */
+            background-color: #2563EB; 
             color: white;
-            border-radius: 6px;
+            border-radius: 8px;
             border: none;
-            padding: 10px 24px;
-            font-weight: 500;
+            padding: 12px 24px;
+            font-weight: 600;
             width: 100%;
             transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .stButton>button:hover {
             background-color: #1D4ED8;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
         }
 
         /* 7. TAB STYLING */
         .stTabs [data-baseweb="tab-list"] {
-            gap: 24px;
+            gap: 8px;
             border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 20px;
         }
         .stTabs [data-baseweb="tab"] {
-            height: 48px;
+            height: 50px;
             white-space: pre-wrap;
             background-color: transparent;
             border: none;
-            color: #6B7280;
-            font-weight: 500;
+            color: #64748B;
+            font-weight: 600;
+            padding: 0 20px;
         }
         .stTabs [aria-selected="true"] {
-            color: #2563EB;
-            border-bottom: 2px solid #2563EB;
+            color: #0F172A; /* Darker selected text */
+            border-bottom: 3px solid #2563EB;
+            background-color: #EFF6FF; /* Subtle blue background for active tab */
         }
         
         /* Hide Footer */
@@ -127,7 +141,7 @@ st.markdown("""
 st.markdown("""
     <div class="custom-header">
         <h1>Udhav Agarwalla & Co.</h1>
-        <p>AI-Powered Audit & Compliance Utilities</p>
+        <p>AI-POWERED UTILITIES</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -135,11 +149,17 @@ st.markdown("""
 # 3. SIDEBAR NAVIGATION
 # ==========================================
 with st.sidebar:
-    st.markdown("### 🛠️ Tool Menu")
+    st.markdown("### 🛠️ TOOL MENU")
     
+    # UPDATED MENU LIST
     selected_tool = st.radio(
         "Select Module:",
-        ["26AS Automation", "GST Tools (Coming Soon)", "Tax Audit (Coming Soon)"],
+        [
+            "26AS Automation", 
+            "GST Utilities", 
+            "Tax Audit Utilities", 
+            "Company Audit Utilities"
+        ],
         index=0,
         label_visibility="collapsed"
     )
@@ -149,9 +169,9 @@ with st.sidebar:
     # Contact Card in Sidebar
     st.markdown("""
         <div style="background-color:white; padding:15px; border-radius:8px; border:1px solid #E5E7EB;">
-            <small style="color:#6B7280; font-weight:600;">NEED ASSISTANCE?</small>
-            <p style="font-size:13px; margin-top:5px; margin-bottom:0; color:#374151;">
-                Contact the technical team for support with file formats.
+            <small style="color:#6B7280; font-weight:700; letter-spacing:0.5px;">NEED SUPPORT?</small>
+            <p style="font-size:13px; margin-top:5px; margin-bottom:0; color:#374151; line-height:1.4;">
+                Contact the technical team for support with file formats or errors.
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -272,12 +292,12 @@ if selected_tool == "26AS Automation":
 
         with col2:
             st.markdown("""
-                <div style="background-color:#EFF6FF; padding:20px; border-radius:8px; border-left:4px solid #2563EB;">
-                    <strong style="color:#1E40AF">💡 How to use:</strong>
-                    <ol style="margin-top:10px; color:#374151; padding-left:20px;">
-                        <li>Download your 26AS as a PDF from the portal.</li>
+                <div style="background-color:#F8FAFC; padding:24px; border-radius:12px; border: 1px solid #E2E8F0;">
+                    <strong style="color:#0F172A; font-size:16px;">💡 INSTRUCTIONS</strong>
+                    <ol style="margin-top:12px; color:#475569; padding-left:20px; line-height:1.6;">
+                        <li>Download your 26AS as a <b>PDF</b> from the portal.</li>
                         <li>Drag and drop the file into the box on the left.</li>
-                        <li>Click <b>Start Conversion</b> and wait.</li>
+                        <li>Click <b>START CONVERSION</b> and wait (OCR is processing).</li>
                         <li>Download the cleaned Excel sheet.</li>
                     </ol>
                 </div>
@@ -504,11 +524,18 @@ if selected_tool == "26AS Automation":
                     st.error(f"Error: {e}")
         st.markdown("</div>", unsafe_allow_html=True)
 
-# --- PLACEHOLDERS ---
-elif selected_tool == "GST Tools (Coming Soon)":
-    st.markdown("<div class='custom-header'><h1>GST Utilities</h1></div>", unsafe_allow_html=True)
-    st.info("🚧 Module under development.")
+# --- OTHER TOOLS ---
+elif selected_tool == "GST Utilities":
+    st.markdown("### 📊 GST Utilities")
+    st.info("🚧 This module is currently under development.")
+    # You can add tabs here later: tab1, tab2 = st.tabs(["GSTR-2A vs Books", "GSTR-1 Analysis"])
 
-elif selected_tool == "Tax Audit (Coming Soon)":
-    st.markdown("<div class='custom-header'><h1>Tax Audit Utilities</h1></div>", unsafe_allow_html=True)
-    st.info("🚧 Module under development.")
+elif selected_tool == "Tax Audit Utilities":
+    st.markdown("### 📝 Tax Audit Utilities")
+    st.info("🚧 This module is currently under development.")
+    # Tabs placeholder: tab1, tab2 = st.tabs(["Clause 44 Analysis", "Depreciation Calculator"])
+
+elif selected_tool == "Company Audit Utilities":
+    st.markdown("### 🏢 Company Audit Utilities")
+    st.info("🚧 This module is currently under development.")
+    # Tabs placeholder: tab1, tab2 = st.tabs(["Ratio Analysis", "Schedule III Checks"])
