@@ -29,58 +29,63 @@ st.markdown("""
             color: #1F2937;
         }
 
-        /* 2. AGGRESSIVE WHITESPACE REMOVAL */
+        /* 2. HEADER FIX (CRITICAL CHANGE) */
+        /* We do NOT hide the header completely anymore. */
+        /* Instead, we make it transparent so the toggle button stays visible. */
+        header[data-testid="stHeader"] {
+            background-color: transparent !important;
+        }
+        
+        /* Optional: Hide the 'Deploy' button if it annoys you, but keep the rest */
+        .stAppDeployButton {
+            visibility: hidden;
+        }
+
+        /* 3. WHITESPACE MANAGEMENT */
         .block-container {
-            padding-top: 0rem !important; /* Removed top padding completely */
+            padding-top: 2rem !important; /* Added space for the toggle button */
             padding-bottom: 2rem !important;
             padding-left: 2rem !important;
             padding-right: 2rem !important;
             max-width: 100% !important;
         }
-        
-        /* Remove the default top header bar entirely */
-        header[data-testid="stHeader"] {
-            display: none;
-        }
 
-        /* 3. SIDEBAR STYLING */
+        /* 4. SIDEBAR STYLING */
         [data-testid="stSidebar"] {
             background-color: #F8FAFC; 
             border-right: 1px solid #E2E8F0;
         }
         
-        /* 4. CUSTOM HEADER COMPONENT - UPDATED FOR SIZE */
+        /* 5. CUSTOM HEADER COMPONENT */
         .custom-header {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); /* Modern Navy Gradient */
-            padding: 40px 30px; /* Increased padding for grander look */
-            border-radius: 0px 0px 16px 16px;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            padding: 40px 30px;
+            border-radius: 12px; /* Changed to full rounded to separate from top */
             margin-bottom: 30px;
             color: white;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         
-        /* BIGGER FIRM NAME */
         .custom-header h1 {
-            font-size: 42px !important; /* Increased from 26px */
-            font-weight: 800 !important; /* Extra Bold */
+            font-size: 42px !important;
+            font-weight: 800 !important;
             margin: 0;
             color: #FFFFFF !important;
             letter-spacing: 1px;
-            text-transform: uppercase; /* Makes it look more official */
+            text-transform: uppercase;
             line-height: 1.2;
         }
         
-        /* BIGGER SUBTITLE */
         .custom-header p {
-            font-size: 20px !important; /* Increased from 15px */
+            font-size: 20px !important;
             color: #94A3B8;
             margin: 8px 0 0 0;
             font-weight: 500;
             letter-spacing: 0.5px;
         }
 
-        /* 5. "CARD" STYLE FOR TOOLS */
+        /* 6. "CARD" STYLE FOR TOOLS */
         .tool-card {
             background-color: white;
             padding: 24px;
@@ -90,7 +95,7 @@ st.markdown("""
             margin-bottom: 20px;
         }
         
-        /* 6. BUTTON STYLING */
+        /* 7. BUTTON STYLING */
         .stButton>button {
             background-color: #2563EB; 
             color: white;
@@ -109,7 +114,7 @@ st.markdown("""
             transform: translateY(-1px);
         }
 
-        /* 7. TAB STYLING */
+        /* 8. TAB STYLING */
         .stTabs [data-baseweb="tab-list"] {
             gap: 8px;
             border-bottom: 1px solid #E5E7EB;
@@ -125,9 +130,9 @@ st.markdown("""
             padding: 0 20px;
         }
         .stTabs [aria-selected="true"] {
-            color: #0F172A; /* Darker selected text */
+            color: #0F172A;
             border-bottom: 3px solid #2563EB;
-            background-color: #EFF6FF; /* Subtle blue background for active tab */
+            background-color: #EFF6FF;
         }
         
         /* Hide Footer */
@@ -151,7 +156,6 @@ st.markdown("""
 with st.sidebar:
     st.markdown("### 🛠️ TOOL MENU")
     
-    # UPDATED MENU LIST
     selected_tool = st.radio(
         "Select Module:",
         [
@@ -166,7 +170,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Contact Card in Sidebar
+    # Contact Card
     st.markdown("""
         <div style="background-color:white; padding:15px; border-radius:8px; border:1px solid #E5E7EB;">
             <small style="color:#6B7280; font-weight:700; letter-spacing:0.5px;">NEED SUPPORT?</small>
@@ -204,18 +208,15 @@ if selected_tool == "26AS Automation":
                 if st.button("🚀 Start Conversion", key="btn1"):
                     with st.spinner("Scanning PDF... This may take 30-60 seconds..."):
                         try:
-                            # 1. Convert PDF to Images
                             images = convert_from_bytes(uploaded_pdf.read())
                             full_text = ""
                             progress_bar = st.progress(0)
                             
-                            # 2. Extract Text via OCR
                             for i, image in enumerate(images):
                                 text = pytesseract.image_to_string(image, config='--psm 4')
                                 full_text += text + "\n"
                                 progress_bar.progress((i + 1) / len(images))
                             
-                            # 3. Parse Data
                             data = []
                             lines = full_text.split('\n')
                             tan_loose_pattern = re.compile(r'[A-Z]{4}[0-9OIl]{5}[A-Z]')
@@ -273,7 +274,6 @@ if selected_tool == "26AS Automation":
                                 df = df.drop_duplicates(subset=['Name of Party'], keep='first')
                                 df = df.sort_values('Name of Party').reset_index(drop=True)
                                 
-                                # 4. Generate Excel
                                 output = io.BytesIO()
                                 with pd.ExcelWriter(output, engine='openpyxl') as writer:
                                     df.to_excel(writer, index=False, sheet_name='26AS Data')
@@ -318,7 +318,6 @@ if selected_tool == "26AS Automation":
                     df = pd.read_excel(uploaded_tally, engine='openpyxl')
                     parties_data = {}
                     
-                    # Iterate rows
                     for idx, row in df.iterrows():
                         try:
                             def get_safe(row, idx): return row.iloc[idx] if len(row) > idx else None
@@ -351,7 +350,6 @@ if selected_tool == "26AS Automation":
                                 else: parties_data[party] = amount
                         except: pass
                     
-                    # Create Excel
                     output = io.BytesIO()
                     wb = Workbook()
                     ws = wb.active
@@ -430,7 +428,6 @@ if selected_tool == "26AS Automation":
                     matched_pairs = {}
                     matched_26as_indices = set()
                     
-                    # Fuzzy Match Logic
                     for idx_b, party_b in enumerate(df_books['Name of Party']):
                         best_match = None
                         best_score = 0
@@ -489,7 +486,6 @@ if selected_tool == "26AS Automation":
                     })
                     final_df = pd.concat([final_df, total_row], ignore_index=True)
                     
-                    # Save to Excel & Format
                     output = io.BytesIO()
                     final_df.to_excel(output, index=False, sheet_name='Reconciliation')
                     output.seek(0)
@@ -497,9 +493,9 @@ if selected_tool == "26AS Automation":
                     wb = load_workbook(output)
                     ws = wb.active
                     
-                    matched_fill = PatternFill(start_color='C6EFCE', end_color='C6EFCE', fill_type='solid') # Green
-                    diff_fill = PatternFill(start_color='FFC7CE', end_color='FFC7CE', fill_type='solid') # Red
-                    total_fill = PatternFill(start_color='FFEB9C', end_color='FFEB9C', fill_type='solid') # Yellow
+                    matched_fill = PatternFill(start_color='C6EFCE', end_color='C6EFCE', fill_type='solid')
+                    diff_fill = PatternFill(start_color='FFC7CE', end_color='FFC7CE', fill_type='solid')
+                    total_fill = PatternFill(start_color='FFEB9C', end_color='FFEB9C', fill_type='solid')
                     
                     for row in ws.iter_rows(min_row=2):
                         party = row[0].value
@@ -528,14 +524,11 @@ if selected_tool == "26AS Automation":
 elif selected_tool == "GST Utilities":
     st.markdown("### 📊 GST Utilities")
     st.info("🚧 This module is currently under development.")
-    # You can add tabs here later: tab1, tab2 = st.tabs(["GSTR-2A vs Books", "GSTR-1 Analysis"])
 
 elif selected_tool == "Tax Audit Utilities":
     st.markdown("### 📝 Tax Audit Utilities")
     st.info("🚧 This module is currently under development.")
-    # Tabs placeholder: tab1, tab2 = st.tabs(["Clause 44 Analysis", "Depreciation Calculator"])
 
 elif selected_tool == "Company Audit Utilities":
     st.markdown("### 🏢 Company Audit Utilities")
     st.info("🚧 This module is currently under development.")
-    # Tabs placeholder: tab1, tab2 = st.tabs(["Ratio Analysis", "Schedule III Checks"])
