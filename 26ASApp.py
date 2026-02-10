@@ -9,99 +9,124 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from fuzzywuzzy import fuzz
 
 # ==========================================
-# 1. PAGE CONFIGURATION & CSS STYLING
+# 1. PAGE CONFIGURATION & VISUAL OVERHAUL
 # ==========================================
 st.set_page_config(
-    page_title="CA Udhava Agarwalla | AI Tools",
-    page_icon="📊",
+    page_title="Udhav Agarwalla & Co | AI Tools",
+    page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS to match your website's professional look
+# --- PROFESSIONAL CSS STYLING ---
 st.markdown("""
     <style>
-        /* Main Background and Font */
-        .stApp {
-            background-color: #FFFFFF;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        /* 1. GLOBAL FONT & COLOR SETTINGS */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        
+        html, body, [class*="css"] {
+            font-family: 'Inter', sans-serif;
+            color: #1F2937;
+        }
+
+        /* 2. AGGRESSIVE WHITESPACE REMOVAL (Fixes the Border Issue) */
+        .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 2rem !important;
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+            max-width: 100% !important;
         }
         
-        /* Hide Streamlit Default Branding */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
+        /* Remove the default top header bar entirely */
+        header[data-testid="stHeader"] {
+            display: none;
+        }
+
+        /* 3. SIDEBAR STYLING */
+        [data-testid="stSidebar"] {
+            background-color: #F3F4F6; /* Light gray professional bg */
+            border-right: 1px solid #E5E7EB;
+        }
         
-        /* Custom Header Styling */
+        /* 4. CUSTOM HEADER COMPONENT */
         .custom-header {
-            background-color: #003366; /* CA Professional Blue */
-            padding: 20px;
-            border-radius: 0px 0px 10px 10px;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); /* Modern Navy Gradient */
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             color: white;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .custom-header h1 {
-            margin: 0;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 600;
-            color: white !important;
+            margin: 0;
+            color: #FFFFFF !important;
+            letter-spacing: -0.5px;
         }
         .custom-header p {
-            margin: 5px 0 0 0;
-            font-size: 16px;
-            opacity: 0.9;
+            font-size: 15px;
+            color: #94A3B8;
+            margin: 4px 0 0 0;
+            font-weight: 400;
+        }
+
+        /* 5. "CARD" STYLE FOR TOOLS (Makes it look like software, not a doc) */
+        .tool-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         
-        /* Sidebar Styling */
-        [data-testid="stSidebar"] {
-            background-color: #F8F9FA;
-            border-right: 1px solid #E9ECEF;
-        }
-        
-        /* Buttons */
+        /* 6. BUTTON STYLING */
         .stButton>button {
-            background-color: #003366;
+            background-color: #2563EB; /* Bright Professional Blue */
             color: white;
-            border-radius: 5px;
+            border-radius: 6px;
             border: none;
             padding: 10px 24px;
+            font-weight: 500;
             width: 100%;
+            transition: all 0.2s;
         }
         .stButton>button:hover {
-            background-color: #004080;
-            color: white;
+            background-color: #1D4ED8;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
-        
-        /* Tabs */
+
+        /* 7. TAB STYLING */
         .stTabs [data-baseweb="tab-list"] {
-            gap: 10px;
+            gap: 24px;
+            border-bottom: 1px solid #E5E7EB;
         }
         .stTabs [data-baseweb="tab"] {
-            height: 50px;
+            height: 48px;
             white-space: pre-wrap;
-            background-color: #F0F2F6;
-            border-radius: 4px 4px 0px 0px;
-            gap: 1px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            background-color: transparent;
+            border: none;
+            color: #6B7280;
+            font-weight: 500;
         }
         .stTabs [aria-selected="true"] {
-            background-color: #FFFFFF;
-            border-bottom: 2px solid #003366;
-            color: #003366;
-            font-weight: bold;
+            color: #2563EB;
+            border-bottom: 2px solid #2563EB;
         }
+        
+        /* Hide Footer */
+        footer {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. HEADER SECTION
+# 2. MAIN HEADER
 # ==========================================
 st.markdown("""
     <div class="custom-header">
-        <h1>CA UDHAVA AGARWALLA & CO.</h1>
+        <h1>Udhav Agarwalla & Co.</h1>
         <p>AI-Powered Audit & Compliance Utilities</p>
     </div>
 """, unsafe_allow_html=True)
@@ -110,17 +135,26 @@ st.markdown("""
 # 3. SIDEBAR NAVIGATION
 # ==========================================
 with st.sidebar:
-    st.title("Tool Menu")
+    st.markdown("### 🛠️ Tool Menu")
     
-    # Navigation Selection
     selected_tool = st.radio(
         "Select Module:",
         ["26AS Automation", "GST Tools (Coming Soon)", "Tax Audit (Coming Soon)"],
-        index=0
+        index=0,
+        label_visibility="collapsed"
     )
     
     st.markdown("---")
-    st.info("Need Help? Contact the office for support with these tools.")
+    
+    # Contact Card in Sidebar
+    st.markdown("""
+        <div style="background-color:white; padding:15px; border-radius:8px; border:1px solid #E5E7EB;">
+            <small style="color:#6B7280; font-weight:600;">NEED ASSISTANCE?</small>
+            <p style="font-size:13px; margin-top:5px; margin-bottom:0; color:#374151;">
+                Contact the technical team for support with file formats.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # ==========================================
 # 4. MAIN APP LOGIC
@@ -128,116 +162,134 @@ with st.sidebar:
 
 if selected_tool == "26AS Automation":
     
-    st.subheader("📂 26AS Reconciliation Suite")
-    st.markdown("Select a function below to process your files.")
+    st.markdown("### 📂 26AS Reconciliation Suite")
+    st.markdown("Select a function below to process your audit files.")
     
-    # Create Tabs for the 3 sub-parts
-    tab1, tab2, tab3 = st.tabs(["📄 1. PDF to Excel", "📒 2. Tally Summary", "🔍 3. Reconciliation"])
+    # TABS
+    tab1, tab2, tab3 = st.tabs(["PDF to Excel", "Tally Summary", "Reconciliation"])
 
     # --- SUB-TOOL 1: PDF to Excel (OCR) ---
     with tab1:
-        st.markdown("#### Convert 26AS PDF to Excel")
-        col1, col2 = st.columns([1, 1])
+        st.markdown("<div class='tool-card'>", unsafe_allow_html=True) # Start Card
+        st.markdown("#### 📄 Convert 26AS PDF to Excel")
+        
+        col1, col2 = st.columns([1, 1], gap="large")
         
         with col1:
-            uploaded_pdf = st.file_uploader("Upload 26AS PDF", type="pdf", key="t1")
+            st.markdown("**Step 1: Upload File**")
+            uploaded_pdf = st.file_uploader("Upload 26AS PDF", type="pdf", key="t1", label_visibility="collapsed")
             
+            if uploaded_pdf:
+                st.markdown("---")
+                if st.button("🚀 Start Conversion", key="btn1"):
+                    with st.spinner("Scanning PDF... This may take 30-60 seconds..."):
+                        try:
+                            # 1. Convert PDF to Images
+                            images = convert_from_bytes(uploaded_pdf.read())
+                            full_text = ""
+                            progress_bar = st.progress(0)
+                            
+                            # 2. Extract Text via OCR
+                            for i, image in enumerate(images):
+                                text = pytesseract.image_to_string(image, config='--psm 4')
+                                full_text += text + "\n"
+                                progress_bar.progress((i + 1) / len(images))
+                            
+                            # 3. Parse Data
+                            data = []
+                            lines = full_text.split('\n')
+                            tan_loose_pattern = re.compile(r'[A-Z]{4}[0-9OIl]{5}[A-Z]')
+
+                            for line in lines:
+                                line = line.strip()
+                                if len(line) < 15: continue
+                                match = tan_loose_pattern.search(line)
+                                if match:
+                                    tan_code = match.group()
+                                    clean_line = re.sub(r'\s+', ' ', line)
+                                    parts = clean_line.split(' ')
+                                    tan_idx = -1
+                                    for idx, part in enumerate(parts):
+                                        if tan_code in part:
+                                            tan_idx = idx
+                                            break
+                                    if tan_idx != -1:
+                                        name_parts = []
+                                        for j in range(tan_idx):
+                                            w = parts[j]
+                                            if len(w) > 1 and not re.match(r'^\d+$', w) and w.lower() not in ['sr', 'no']:
+                                                name_parts.append(w)
+                                        party_name = " ".join(name_parts)
+                                        party_name = re.sub(r'^[^A-Z]+', '', party_name)
+
+                                        amounts = []
+                                        for token in parts[tan_idx+1:]:
+                                            token_fix = token.replace('O','0').replace('o','0').replace('l','1').replace('I','1').replace('S','5')
+                                            token_clean = re.sub(r'[^\d\.]', '', token_fix)
+                                            if re.match(r'^\d+\.?\d{0,2}$', token_clean):
+                                                try:
+                                                    val = float(token_clean)
+                                                    if val > 10:
+                                                        amounts.append(val)
+                                                except: pass
+                                        
+                                        final_tax = 0.0
+                                        if len(amounts) >= 3:
+                                            final_tax = amounts[1]
+                                        elif len(amounts) == 2:
+                                            final_tax = amounts[1]
+                                        elif len(amounts) == 1:
+                                            final_tax = amounts[0]
+                                        
+                                        if len(party_name) > 3 and final_tax > 0:
+                                            data.append({
+                                                'Name of Party': party_name,
+                                                'Amount showing in 26AS': final_tax
+                                            })
+
+                            df = pd.DataFrame(data)
+                            
+                            if not df.empty:
+                                df = df.drop_duplicates(subset=['Name of Party'], keep='first')
+                                df = df.sort_values('Name of Party').reset_index(drop=True)
+                                
+                                # 4. Generate Excel
+                                output = io.BytesIO()
+                                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                                    df.to_excel(writer, index=False, sheet_name='26AS Data')
+                                    ws = writer.sheets['26AS Data']
+                                    ws.column_dimensions['A'].width = 50
+                                    ws.column_dimensions['B'].width = 18
+                                
+                                output.seek(0)
+                                st.success(f"✅ Extracted {len(df)} rows successfully.")
+                                st.download_button("Download Excel File", data=output, file_name="26AS_Extracted_Data.xlsx")
+                            else:
+                                st.error("No valid data found. Please check PDF quality.")
+                                
+                        except Exception as e:
+                            st.error(f"Error: {e}")
+
         with col2:
-            st.info("💡 **Instructions:**\n1. Upload the PDF.\n2. Click 'Start Conversion'.\n3. Wait for OCR processing (30-60s).")
-
-        if uploaded_pdf:
-            if st.button("Start Conversion", key="btn1"):
-                with st.spinner("Scanning PDF... This may take a minute..."):
-                    try:
-                        # 1. Convert PDF to Images
-                        images = convert_from_bytes(uploaded_pdf.read())
-                        full_text = ""
-                        progress_bar = st.progress(0)
-                        
-                        # 2. Extract Text via OCR
-                        for i, image in enumerate(images):
-                            text = pytesseract.image_to_string(image, config='--psm 4')
-                            full_text += text + "\n"
-                            progress_bar.progress((i + 1) / len(images))
-                        
-                        # 3. Parse Data (Your Logic)
-                        data = []
-                        lines = full_text.split('\n')
-                        tan_loose_pattern = re.compile(r'[A-Z]{4}[0-9OIl]{5}[A-Z]')
-
-                        for line in lines:
-                            line = line.strip()
-                            if len(line) < 15: continue
-                            match = tan_loose_pattern.search(line)
-                            if match:
-                                tan_code = match.group()
-                                clean_line = re.sub(r'\s+', ' ', line)
-                                parts = clean_line.split(' ')
-                                tan_idx = -1
-                                for idx, part in enumerate(parts):
-                                    if tan_code in part:
-                                        tan_idx = idx
-                                        break
-                                if tan_idx != -1:
-                                    name_parts = []
-                                    for j in range(tan_idx):
-                                        w = parts[j]
-                                        if len(w) > 1 and not re.match(r'^\d+$', w) and w.lower() not in ['sr', 'no']:
-                                            name_parts.append(w)
-                                    party_name = " ".join(name_parts)
-                                    party_name = re.sub(r'^[^A-Z]+', '', party_name)
-
-                                    amounts = []
-                                    for token in parts[tan_idx+1:]:
-                                        token_fix = token.replace('O','0').replace('o','0').replace('l','1').replace('I','1').replace('S','5')
-                                        token_clean = re.sub(r'[^\d\.]', '', token_fix)
-                                        if re.match(r'^\d+\.?\d{0,2}$', token_clean):
-                                            try:
-                                                val = float(token_clean)
-                                                if val > 10:
-                                                    amounts.append(val)
-                                            except: pass
-                                    
-                                    final_tax = 0.0
-                                    if len(amounts) >= 3:
-                                        final_tax = amounts[1]
-                                    elif len(amounts) == 2:
-                                        final_tax = amounts[1]
-                                    elif len(amounts) == 1:
-                                        final_tax = amounts[0]
-                                    
-                                    if len(party_name) > 3 and final_tax > 0:
-                                        data.append({
-                                            'Name of Party': party_name,
-                                            'Amount showing in 26AS': final_tax
-                                        })
-
-                        df = pd.DataFrame(data)
-                        
-                        if not df.empty:
-                            df = df.drop_duplicates(subset=['Name of Party'], keep='first')
-                            df = df.sort_values('Name of Party').reset_index(drop=True)
-                            
-                            # 4. Generate Excel
-                            output = io.BytesIO()
-                            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                                df.to_excel(writer, index=False, sheet_name='26AS Data')
-                                ws = writer.sheets['26AS Data']
-                                ws.column_dimensions['A'].width = 50
-                                ws.column_dimensions['B'].width = 18
-                            
-                            output.seek(0)
-                            st.success(f"Success! Extracted {len(df)} rows.")
-                            st.download_button("Download 26AS Excel", data=output, file_name="26AS_Extracted_Data.xlsx")
-                        else:
-                            st.error("No valid data found. Please check PDF quality.")
-                            
-                    except Exception as e:
-                        st.error(f"Error: {e}")
+            st.markdown("""
+                <div style="background-color:#EFF6FF; padding:20px; border-radius:8px; border-left:4px solid #2563EB;">
+                    <strong style="color:#1E40AF">💡 How to use:</strong>
+                    <ol style="margin-top:10px; color:#374151; padding-left:20px;">
+                        <li>Download your 26AS as a PDF from the portal.</li>
+                        <li>Drag and drop the file into the box on the left.</li>
+                        <li>Click <b>Start Conversion</b> and wait.</li>
+                        <li>Download the cleaned Excel sheet.</li>
+                    </ol>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        st.markdown("</div>", unsafe_allow_html=True) # End Card
 
     # --- SUB-TOOL 2: Tally Summary ---
     with tab2:
-        st.markdown("#### Generate Tally Ledger Summary")
+        st.markdown("<div class='tool-card'>", unsafe_allow_html=True)
+        st.markdown("#### 📒 Tally Ledger to Summary")
+        
         uploaded_tally = st.file_uploader("Upload Tally Export (Excel)", type=["xlsx", "xls"], key="t2")
         
         if uploaded_tally:
@@ -246,10 +298,9 @@ if selected_tool == "26AS Automation":
                     df = pd.read_excel(uploaded_tally, engine='openpyxl')
                     parties_data = {}
                     
-                    # Iterate rows (Your Logic)
+                    # Iterate rows
                     for idx, row in df.iterrows():
                         try:
-                            # Safe extraction
                             def get_safe(row, idx): return row.iloc[idx] if len(row) > idx else None
                             
                             particulars = str(get_safe(row, 2)).strip() if pd.notna(get_safe(row, 2)) else ''
@@ -328,16 +379,20 @@ if selected_tool == "26AS Automation":
                     
                 except Exception as e:
                     st.error(f"Error: {e}")
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # --- SUB-TOOL 3: Reconciliation ---
     with tab3:
-        st.markdown("#### Reconcile Books vs 26AS")
+        st.markdown("<div class='tool-card'>", unsafe_allow_html=True)
+        st.markdown("#### 🔍 Reconcile Books vs 26AS")
+        
         c1, c2 = st.columns(2)
         with c1:
             file_books = st.file_uploader("Upload Books Summary", type="xlsx", key="f1")
         with c2:
             file_26as = st.file_uploader("Upload 26AS Summary", type="xlsx", key="f2")
             
+        st.markdown("<br>", unsafe_allow_html=True)
         threshold = st.slider("Fuzzy Match Sensitivity", 50, 100, 75, help="Lower = looser matching")
 
         if file_books and file_26as:
@@ -371,7 +426,7 @@ if selected_tool == "26AS Automation":
 
                     reco_data = []
                     
-                    # 1. Matches
+                    # Matches
                     for idx_b, idx_a in matched_pairs.items():
                         b_row = df_books.iloc[idx_b]
                         a_row = df_26as.iloc[idx_a]
@@ -382,7 +437,7 @@ if selected_tool == "26AS Automation":
                             'Difference': b_row['Amount in Books'] - a_row['Amount in 26AS']
                         })
                     
-                    # 2. Only in Books
+                    # Only in Books
                     for idx_b in range(len(df_books)):
                         if idx_b not in matched_pairs:
                             row = df_books.iloc[idx_b]
@@ -393,7 +448,7 @@ if selected_tool == "26AS Automation":
                                 'Difference': row['Amount in Books']
                             })
                             
-                    # 3. Only in 26AS
+                    # Only in 26AS
                     for idx_a in range(len(df_26as)):
                         if idx_a not in matched_26as_indices:
                             row = df_26as.iloc[idx_a]
@@ -447,12 +502,13 @@ if selected_tool == "26AS Automation":
                     
                 except Exception as e:
                     st.error(f"Error: {e}")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # --- PLACEHOLDERS ---
 elif selected_tool == "GST Tools (Coming Soon)":
-    st.markdown("## GST Utilities")
+    st.markdown("<div class='custom-header'><h1>GST Utilities</h1></div>", unsafe_allow_html=True)
     st.info("🚧 Module under development.")
 
 elif selected_tool == "Tax Audit (Coming Soon)":
-    st.markdown("## Tax Audit Utilities")
+    st.markdown("<div class='custom-header'><h1>Tax Audit Utilities</h1></div>", unsafe_allow_html=True)
     st.info("🚧 Module under development.")
